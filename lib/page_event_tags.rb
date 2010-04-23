@@ -112,7 +112,7 @@ module PageEventTags
   tag "events:upcoming" do |tag|
     tag.expand
   end
-
+  
   desc %{
     Cycles through each of the upcoming events. Inside this tag all page attribute tags
     are mapped to the current event's page.
@@ -136,6 +136,93 @@ module PageEventTags
     result
   end
 
+  desc %{
+    Gives access to next three upcoming events' pages by parent_id.
+    
+    *Usage:*
+    <pre><code><r:events:upcoming_by_id id="parent_id" [limit="number"]>...</r:events:upcoming_by_id></code></pre>
+  }
+
+  tag "events:upcoming_by_id" do |tag|
+    id = tag.attr['id']
+    unless id.nil?
+      limit = tag.attr['limit'] || 3
+      tag.locals.events = Page.upcoming_by_id(id, limit)
+      tag.expand
+    else
+      raise TagError.new("`events:upcoming_by_id' tag requires an article `id' attribute")
+    end
+  end
+  
+  desc %{
+    Cycles through each of the upcoming events. Inside this tag all page attribute tags
+     are mapped to the current event's page.
+    
+    *Usage:*
+    <pre><code><r:events:upcoming_by_id:each>
+     ...
+    </r:events:upcoming_by_id:each>
+    </code></pre>
+  }
+  tag "events:upcoming_by_id:each" do |tag|
+    result = []
+    tag.locals.events.each do |event|
+      tag.locals.event = event
+      tag.locals.page = event
+      result << tag.expand
+    end
+    result
+  end
+  
+  desc %{
+    Count number of upcoming events.
+    
+    *Usage:*
+    <pre><code><r:events:upcoming_by_id:count>...</r:events:upcoming_by_id:count></code></pre>
+  }
+  
+  tag "events:upcoming_children" do |tag|
+    tag.expand
+  end
+  
+  tag "events:upcoming_children:count" do |tag|
+    # tag.locals.page.children.size
+    tag.locals.page.id
+  end
+    
+  desc %{
+    Count number of upcoming events.
+    
+    *Usage:*
+    <pre><code><r:events:upcoming_by_id:count>...</r:events:upcoming_by_id:count></code></pre>
+  }
+  
+  tag "events:upcoming_by_id:count" do |tag|
+    tag.locals.events.size
+  end
+  
+  desc %{
+    Expand if upcoming events exist.
+    
+    *Usage:*
+    <pre><code><r:events:if_upcoming_by_id>...</r:events:if_upcoming_by_id></code></pre>
+  }
+  
+  tag "events:if_upcoming_by_id" do |tag|
+    tag.expand if tag.locals.events.size > 0
+  end
+  
+  desc %{
+    Expand when no upcoming events exist.
+    
+    *Usage:*
+    <pre><code><r:events:unless_upcoming_by_id>...</r:events:unless_upcoming_by_id></code></pre>
+  }
+  
+  tag "events:unless_upcoming_by_id" do |tag|
+    tag.expand if tag.locals.events.size == 0
+  end
+  
   # ===================================
 
   tag "events:in_range" do |tag|
