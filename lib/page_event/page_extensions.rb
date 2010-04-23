@@ -51,7 +51,7 @@ module PageEvent::PageExtensions
 				:order => "event_datetime_start, event_datetime_end", :limit => limit)		
 		end
     
-    def upcoming_by_id(id, limit = 3)
+    def upcoming_by_id(id, limit = nil)
 			Page.find(:all, 
 				:conditions => ["event_datetime_start >= :event AND status_id = :status AND parent_id = :parent_id", {
 					:event => Time.now.to_s(:db),
