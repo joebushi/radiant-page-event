@@ -64,6 +64,9 @@ There are several tags that allow you to grab either the next event or a list of
 <r:events:next>...</r:events:next>
 <r:events:upcoming:each>...</r:events:upcoming:each>
 
+Events can also be pulled from the current pages children or a specified parent.
+
+<r:events:upcoming_children>...</r:events:upcoming_children>
 
 When it comes to accessing a specific page's event data you can use the following tags:
 
